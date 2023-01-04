@@ -17,8 +17,6 @@ public:
 
 	ATurret();
 
-	virtual void Tick(float DeltaTime) override;
-
 protected:
 
 	virtual void BeginPlay() override;
@@ -29,6 +27,8 @@ protected:
 	bool IsPlayerInRange();
 	bool CanFire();
 	void Fire();
+
+	void SetupCannon();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		UStaticMeshComponent* BodyMesh;

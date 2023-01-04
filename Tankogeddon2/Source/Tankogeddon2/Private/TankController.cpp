@@ -66,11 +66,15 @@ void ATankController::Tick(float DeltaSeconds)
 
 	FVector MouseDirection;
 	DeprojectMousePositionToWorld(MousePos, MouseDirection);
-	FVector TankPosition = TankPawn->GetActorLocation();
-	MousePos.Z = TankPosition.Z;
-	FVector Dir = MousePos - TankPosition;
-	Dir.Normalize();
-	MousePos = TankPosition + Dir * 500;
+	if (TankPawn)
+	{
+		FVector TankPosition = TankPawn->GetActorLocation();
+		MousePos.Z = TankPosition.Z;
+		FVector Dir = MousePos - TankPosition;
+		Dir.Normalize();
+		MousePos = TankPosition + Dir * 500;
+	}
+	
 	//DrawDebugLine(GetWorld(), TankPosition, MousePos, FColor::Green, false, 0.1f, 0, 5);
 
 	
