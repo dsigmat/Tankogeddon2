@@ -5,6 +5,7 @@
 #include "Engine/StaticMesh.h"
 #include "Cannon.h"
 #include <Kismet/KismetMathLibrary.h>
+#include "HealthComponent.h"
 
 
 ATurret::ATurret()
@@ -30,6 +31,16 @@ ATurret::ATurret()
 	UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
 	if (turretMeshTemp)
 		TurretMesh->SetStaticMesh(turretMeshTemp);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
+	HealthComponent->OnDie.AddUObject(this, &ATurret::Destroyed);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ATurret::DamageTaked);
+}
+
+void ATurret::TakeDamage(FDamageData DamageData)
+{
+	HealthComponent->TakeDamage(DamageData);
+	//UE_LOG(LogTemp, Warning, TEXT("Turret %s taked damage: %f"), *GetName(), DamageData.DamageValue);
 }
 
 void ATurret::BeginPlay()
@@ -63,6 +74,7 @@ void ATurret::Destroyed()
 	{
 		Cannon->Destroy();
 	}
+	Destroy();
 }
 
 void ATurret::RotateToPlayer()
@@ -107,5 +119,10 @@ void ATurret::SetupCannon()
 	params.Owner = this;
 	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
+void ATurret::DamageTaked(float Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Turret %s taked damage: %f, health: %f"), *GetName(), Value, HealthComponent->GetHealth());
 }
 

@@ -125,3 +125,8 @@ void ATankPawn::ChangeCannon()
 	//Swap(EquippedCannonClass, SecondCannonClass);
 	SetupCannon(EquippedCannonClass);
 }
+
+void ATankPawn::TakeDamage(FDamageData DamageData)
+{
+
+}

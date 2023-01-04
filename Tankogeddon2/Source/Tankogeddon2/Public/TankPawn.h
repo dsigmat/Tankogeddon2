@@ -7,12 +7,13 @@
 #include "Camera/CameraComponent.h"
 #include <Cannon.h>
 #include "Kismet/KismetMathLibrary.h"
+#include "DamageTaker.h"
 #include "TankPawn.generated.h"
 
 
 
 UCLASS()
-class TANKOGEDDON2_API ATankPawn : public APawn
+class TANKOGEDDON2_API ATankPawn : public APawn, public IDamageTaker
 {
 	GENERATED_BODY()
 
@@ -82,4 +83,7 @@ public:
 
 	void FireSpecial();
 	void ChangeCannon();
+
+	UFUNCTION()
+		virtual void TakeDamage(FDamageData DamageData) override;
 };

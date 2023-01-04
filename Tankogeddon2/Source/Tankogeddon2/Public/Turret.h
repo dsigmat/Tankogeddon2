@@ -5,17 +5,21 @@
 #include "Components/BoxComponent.h"
 #include "Cannon.h"
 #include "GameFramework/Actor.h"
+#include "DamageTaker.h"
 #include "Turret.generated.h"
 
 
 UCLASS()
-class TANKOGEDDON2_API ATurret : public AActor
+class TANKOGEDDON2_API ATurret : public AActor, public IDamageTaker
 {
 	GENERATED_BODY()
 
 public:
 
 	ATurret();
+
+	UFUNCTION()
+	void TakeDamage(FDamageData DamageData) override;
 
 protected:
 
@@ -29,6 +33,10 @@ protected:
 	void Fire();
 
 	void SetupCannon();
+
+	void DamageTaked(float Value);
+
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		UStaticMeshComponent* BodyMesh;
@@ -44,6 +52,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		class UArrowComponent* CannonSetupPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+		class UHealthComponent* HealthComponent;
 
 	UPROPERTY()
 		ACannon* Cannon;
