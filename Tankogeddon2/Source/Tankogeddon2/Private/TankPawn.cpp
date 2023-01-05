@@ -2,6 +2,7 @@
 #include "TankController.h"
 #include "Cannon.h"
 #include "Components/ArrowComponent.h"
+#include "HealthComponent.h"
 
 
 class UInputComponent;
@@ -26,6 +27,10 @@ ATankPawn::ATankPawn()
 
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>("Cannon Setup Point");
 	CannonSetupPoint->SetupAttachment(TurretMesh);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
+	HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ATankPawn::DamageTaked);
 }
 
 void ATankPawn::BeginPlay()
@@ -70,6 +75,7 @@ void ATankPawn::Tick(float DeltaTime)
 		TurretMesh->SetWorldRotation(FMath::Lerp(TargetRotation, TurretRotation, TurretInterpolationKey));
 	}
 }
+
 
 void ATankPawn::MoveForward(float Value)
 {
@@ -128,5 +134,21 @@ void ATankPawn::ChangeCannon()
 
 void ATankPawn::TakeDamage(FDamageData DamageData)
 {
+	//TODO
+	HealthComponent->TakeDamage(DamageData);
+}
 
+
+void ATankPawn::Die()
+{
+	if (Cannon)
+	{
+		Cannon->Destroy();
+	}
+	Destroy();
+}
+
+void ATankPawn::DamageTaked(float Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Tank %s taked damage: %f, health: %f"), *GetName(), Value, HealthComponent->GetHealth());
 }
